@@ -27,7 +27,7 @@ class Img_embed(nn.Module):
 class IMGNet(nn.Module):
     def __init__(self):
         self.model = Img_embed(256**2, 64**2, 300)
-        self.model.load_state_dict("../models/img_model_best.pth")
+        self.model = torch.load("../models/img_model_best.pth")['img_model']
 
         for param in self.model.parameters():
         	param.resquires_grad = False
