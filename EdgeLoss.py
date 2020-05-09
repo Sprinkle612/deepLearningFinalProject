@@ -24,10 +24,26 @@ class Img_embed(nn.Module):
 
         return output
 
+class Text_embed(nn.Module):
+    def __init__(self, input_size, hidden_dim, output_size):
+        super(Text_embed, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_dim)
+        self.relu = nn.ReLU(inplace=True)
+        self.fc2 = nn.Linear(hidden_dim, output_size)
+
+    def forward(self,x):
+        x = x.view(1, -1)
+        output = self.fc1(x)
+        output = self.relu(output)
+        output = F.normalize(self.fc2(output), dim=0, p=2)
+
+        return output
+
 class IMGNet(nn.Module):
     def __init__(self):
+        super(IMGNet, self).__init__()
         self.model = Img_embed(256**2, 64**2, 300)
-        self.model = torch.load("../models/img_model_best.pth")['img_model']
+        self.model.load_state_dict(torch.load("../models/img_model_best.pth")['img_model'])
 
         for param in self.model.parameters():
         	param.resquires_grad = False
